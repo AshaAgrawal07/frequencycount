@@ -1,42 +1,59 @@
 import org.junit.Test;
+import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.*;
 public class FrequencyCounterTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void nullTest() {
-        assertEquals("Invalid string input", FrequencyCounter.checkValidityAndUpdate(null));
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("INVALID INPUT");
+        FrequencyCounter.checkValidityAndUpdate(null);
     }
 
     @Test
     public void emptyTest() {
-        assertEquals("Invalid string input", FrequencyCounter.checkValidityAndUpdate(""));
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("INVALID INPUT");
+        FrequencyCounter.checkValidityAndUpdate("");
     }
 
     @Test
     public void emptySpaceTest() {
-        assertEquals("Invalid string input", FrequencyCounter.checkValidityAndUpdate(" "));
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("INVALID INPUT");
+        FrequencyCounter.checkValidityAndUpdate(" ");
     }
 
     @Test
     public void emptyMultipleSpacesTest() {
-        assertEquals("Invalid string input", FrequencyCounter.checkValidityAndUpdate("    "));
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("INVALID INPUT");
+        FrequencyCounter.checkValidityAndUpdate("    ");
     }
 
     @Test
     public void emptyTabTest() {
-        assertEquals("Invalid string input", FrequencyCounter.checkValidityAndUpdate("  "));
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("INVALID INPUT");FrequencyCounter.checkValidityAndUpdate("  ");
     }
 
     @Test
     public void emptyMultipleTabTest() {
-        assertEquals("Invalid string input", FrequencyCounter.checkValidityAndUpdate("          "));
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("INVALID INPUT");
+        FrequencyCounter.checkValidityAndUpdate("          ");
     }
 
     @Test
     public void emptyLineTest() {
-        assertEquals("Invalid string input", FrequencyCounter.checkValidityAndUpdate("\n"));
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("INVALID INPUT");
+        FrequencyCounter.checkValidityAndUpdate("\n");
     }
 
     @Test

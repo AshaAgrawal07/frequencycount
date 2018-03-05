@@ -40,7 +40,7 @@ public class FrequencyCounter {
 
         while (scan.hasNextLine()) {
             String line = scan.nextLine();
-            checkValidityAndUpdate(line.trim());
+            String s = checkValidityAndUpdate(line.trim());
         }
         //now that everything has been read and put into the dictionary, sort it
         sortByValues(dictionary);
@@ -59,7 +59,7 @@ public class FrequencyCounter {
     public static String checkValidityAndUpdate(String line) {
         //check that the line isnt just null or a bunch of whiteshpace
         if (line == null || line.length() == 0 || line.matches("[\\s]+")) {
-            return("Invalid string input");
+            throw new IllegalArgumentException("INVALID INPUT");
         }
 
         //split over non-word characters
