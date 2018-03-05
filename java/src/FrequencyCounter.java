@@ -6,8 +6,10 @@ import java.util.*;
  */
 public class FrequencyCounter {
 
+    private static HashMap<String, Integer> dictionary = new HashMap<String, Integer>();
+
     /**
-     *used this link:  https://beginnersbook.com/2013/12/how-to-sort-hashmap-in-java-by-keys-and-values/
+     * used this link:  https://beginnersbook.com/2013/12/how-to-sort-hashmap-in-java-by-keys-and-values/
      *
      * @param map the map which we want to sort based on the values (frequency of each key [word])
      * @return the sorted map such that the words in the beginning have the higher frequency
@@ -25,7 +27,7 @@ public class FrequencyCounter {
         // Here I am copying the sorted list in HashMap
         // using LinkedHashMap to preserve the insertion order
         HashMap sortedHashMap = new LinkedHashMap();
-        for (Iterator it = list.iterator(); it.hasNext();) {
+        for (Iterator it = list.iterator(); it.hasNext(); ) {
             Map.Entry entry = (Map.Entry) it.next();
             sortedHashMap.put(entry.getKey(), entry.getValue());
         }
@@ -33,39 +35,46 @@ public class FrequencyCounter {
     }
 
     public static void main(String[] args) {
+
         Scanner scan = new Scanner(System.in);
-        HashMap<String, Integer> dictionary = new HashMap<String, Integer>();
 
-        while(scan.hasNextLine()) {
-            String line = scan.nextLine().trim();
-            if(line == null) {
-                System.out.println("invalid string input");
-                break;
-            }
-            //split over a whitespace and non-word characters
-            //this means that if there is an apostraphe, then the stuff after the ' will be considered a word
-            String[] splittedString = line.split("[\\s\\W]+");
-
-            for (String s : splittedString) {
-                String toCheck = s.toLowerCase();
-                //if the specific word already exists in the dictionary, then update, or else add the word to the dictionary
-
-                if (dictionary.containsKey(toCheck)) {
-                    dictionary.put(toCheck, dictionary.get(toCheck) + 1);
-                } else {
-                        dictionary.put(toCheck, 1);
-                }
-            }
+        while (scan.hasNextLine()) {
+            String line = scan.nextLine();
+            checkValidityAndUpdate(line.trim());
         }
         //now that everything has been read and put into the dictionary, sort it
         sortByValues(dictionary);
 
         //output the first 10
-        System.out.println("Top 10 frequency words:");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Top 10 frequency words:");
         Iterator iterator = dictionary.entrySet().iterator();
-        for(int i = 0; i < 10; i++) {
-            Map.Entry highestFrequency = (Map.Entry)iterator.next();
-            System.out.println("Word:  " + highestFrequency.getKey() + "  # of Times:  " + highestFrequency.getValue());
+        for (int i = 0; i < 10; i++) {
+            Map.Entry highestFrequency = (Map.Entry) iterator.next();
+            stringBuilder.append("\nWord:  " + highestFrequency.getKey() + "  # of Times:  " + highestFrequency.getValue());
         }
+        stringBuilder.toString();
+    }
+
+    public static String checkValidityAndUpdate(String line) {
+        if (line == null || line.length() == 0) {
+            return("Invalid string input");
+        }
+
+        //split over a whitespace and non-word characters
+        //this means that if there is an apostraphe, then the stuff after the ' will be considered a word
+        String[] splittedString = line.split("[\\s\\W]+");
+
+        for (String s : splittedString) {
+            String toCheck = s.toLowerCase();
+            //if the specific word already exists in the dictionary, then update, or else add the word to the dictionary
+
+            if (dictionary.containsKey(toCheck)) {
+                dictionary.put(toCheck, dictionary.get(toCheck) + 1);
+            } else {
+                dictionary.put(toCheck, 1);
+            }
+        }
+        return "Dictionary updated successfully";
     }
 }
