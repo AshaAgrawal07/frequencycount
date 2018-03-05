@@ -57,11 +57,12 @@ public class FrequencyCounter {
     }
 
     public static String checkValidityAndUpdate(String line) {
-        if (line == null || line.length() == 0) {
+        //check that the line isnt just null or a bunch of whiteshpace
+        if (line == null || line.length() == 0 || line.matches("[\\s]+")) {
             return("Invalid string input");
         }
 
-        //split over a whitespace and non-word characters
+        //split over non-word characters
         //this means that if there is an apostraphe, then the stuff after the ' will be considered a word
         String[] splittedString = line.split("[\\s\\W]+");
 

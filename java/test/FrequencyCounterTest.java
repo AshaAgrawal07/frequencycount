@@ -30,6 +30,11 @@ public class FrequencyCounterTest {
     }
 
     @Test
+    public void emptyMultipleTabTest() {
+        assertEquals("Invalid string input", FrequencyCounter.checkValidityAndUpdate("          "));
+    }
+
+    @Test
     public void emptyLineTest() {
         assertEquals("Invalid string input", FrequencyCounter.checkValidityAndUpdate("\n"));
     }
