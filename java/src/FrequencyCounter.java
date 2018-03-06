@@ -8,52 +8,43 @@ public class FrequencyCounter {
 
     private static HashMap<String, Integer> dictionary = new HashMap<String, Integer>();
 
-    /**
-     * used this link:  https://beginnersbook.com/2013/12/how-to-sort-hashmap-in-java-by-keys-and-values/
-     *
-     * @param map the map which we want to sort based on the values (frequency of each key [word])
-     * @return the sorted map such that the words in the beginning have the higher frequency
-     */
-    private static HashMap sortByValues(HashMap<String, Integer> map) {
-        List list = new LinkedList(map.entrySet());
-        // Defined Custom Comparator here
-        Collections.sort(list, new Comparator() {
-            public int compare(Object o1, Object o2) {
-                return ((Comparable) ((Map.Entry) (o2)).getValue())
-                        .compareTo(((Map.Entry) (o1)).getValue());
-            }
-        });
-
-        // Here I am copying the sorted list in HashMap
-        // using LinkedHashMap to preserve the insertion order
-        HashMap sortedHashMap = new LinkedHashMap();
-        for (Iterator it = list.iterator(); it.hasNext(); ) {
-            Map.Entry entry = (Map.Entry) it.next();
-            sortedHashMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedHashMap;
-    }
-
     public static void main(String[] args) {
 
         Scanner scan = new Scanner(System.in);
+        System.out.println("Input URL:  ");
+        String url = scan.nextLine();
+        String line = LinkParse.parse(url);
+        System.out.println("parsing link");
 
-        while (scan.hasNextLine()) {
+        /*while (scan.hasNextLine()) {
             String line = scan.nextLine();
             String s = checkValidityAndUpdate(line.trim());
-        }
+        }*/
+
+        String s = checkValidityAndUpdate(line.trim());
         //now that everything has been read and put into the dictionary, sort it
-        sortByValues(dictionary);
+        //using link:  https://stackoverflow.com/questions/21054415/how-to-sort-a-hashmap-by-the-integer-value
+        Object[] frequencyWords = dictionary.entrySet().toArray();
+        Arrays.sort(frequencyWords, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                return ((Map.Entry<String, Integer>) o2).getValue()
+                        .compareTo(((Map.Entry<String, Integer>) o1).getValue());
+            }
+        });
 
         //output the first 10
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Top 10 frequency words:");
+        int counter = 0;
+        System.out.println("Top 10 frequency words:");
         Iterator iterator = dictionary.entrySet().iterator();
-        for (int i = 0; i < 10; i++) {
-            Map.Entry highestFrequency = (Map.Entry) iterator.next();
-            stringBuilder.append("\nWord:  " + highestFrequency.getKey() + "  # of Times:  " + highestFrequency.getValue());
+        for (Object topFrequency : frequencyWords) {
+            if (counter < 10) {
+                System.out.println("Word:  " + ((Map.Entry<String, Integer>) topFrequency).getKey() + "  Frequency: "
+                        + ((Map.Entry<String, Integer>) topFrequency).getValue());
+                counter++;
+            } else {
+                break;
+            }
         }
-        stringBuilder.toString();
     }
 
     public static String checkValidityAndUpdate(String line) {
