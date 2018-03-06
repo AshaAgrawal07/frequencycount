@@ -20,12 +20,12 @@ int main() {
     map<string, int> dictionary;
 
     //read the words in the file
-    string word, file;
-    getline(cin, file);
-    stringstream stream(file);
+    string word;
+    ifstream file;
+    stringstream stream(word);
 
     //go through each word of the file and put it into the dictionary
-    while (!stream.eof()) {
+    while (file >> word) {
         stream >> word;
 
         //first check if word exists in the dictionary
@@ -38,30 +38,18 @@ int main() {
             dictionary[word]++;
         }
     }
+
+    //after getting all of the words and their frequencies, I want to sort from highest frequency to lowest
+    //i used this link:  https://stackoverflow.com/questions/5056645/sorting-stdmap-using-value
+    vector<pair<string, int>> pairs;
+    for (auto itr = dictionary.begin(); itr != dictionary.end(); ++itr)
+        pairs.push_back(*itr);
+
+    sort(pairs.begin(), pairs.end(), [=](pair<int, int>& a, pair<int, int>& b)
+    {
+        return a.second < b.second;
+    });
+
+    //now I want to output the top 10 words
 }
-string checkValidityAndUpdate(string line) {
-    //check that the line isnt just null or a bunch of whiteshpace
-    if (regex_match(line, "[\\s]+")) {
-        throw invalid_argument("INVALID INPUT");
-    } else {
-        if (line == NULL || line.length() == 0) {
-            throw invalid_argument("INVALID INPUT");
-        }
-    }
 
-    //split over non-word characters
-    //this means that if there is an apostraphe, then the stuff after the ' will be considered a word
-    vector<string> splittedString = line.split("[\\s\\W]+");
-
-    for (string s : splittedString) {
-        string toCheck = s;
-        //if the specific word already exists in the dictionary, then update, or else add the word to the dictionary
-
-        if (dictionary.containsKey(toCheck)) {
-            dictionary.put(toCheck, dictionary.get(toCheck) + 1);
-        } else {
-            dictionary.put(toCheck, 1);
-        }
-    }
-    return "Dictionary updated successfully";
-}
