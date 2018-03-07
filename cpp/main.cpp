@@ -3,7 +3,6 @@
 //
 
 #include "FrequencyCount.h"
-#include "FrequencyCount.cpp"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -15,11 +14,13 @@
 #include <locale>
 
 using namespace std;
-static map<string, int> dictionary;
+map<string, int> dictionary;
 
 vector<pair<string, int>> sortMap(map<string, int> map);
 
 void inputWords(vector<string> vector);
+
+void checkValidity(string basic_string);
 
 int main() {
 
@@ -33,6 +34,7 @@ int main() {
     vector<string> lines;
     while (cin) {
         getline(cin, file);
+        checkValidity(file);
         lines.push_back(file);
     }
     for (int i = 0; i < lines.size(); i++) {
@@ -55,6 +57,12 @@ int main() {
     }
     for (int i = 0; i < n; i++) {
         cout << "Word:  " << pairs[i].first << "  Frequency:  " << pairs[i].second << endl;
+
+    }
+}
+
+void checkValidity(string file) {
+    if (file == NULL|| file.) {
 
     }
 }
