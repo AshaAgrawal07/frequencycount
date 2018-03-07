@@ -13,17 +13,16 @@
 #include <locale>
 
 using namespace std;
+
+//dictionary will contain the word as the key and its frequency as the value
 map<string, int> dictionary;
 
 vector<pair<string, int>> sortMap(map<string, int> map);
-
 void inputWords(vector<string> vector);
-
 void checkValidity(string basic_string);
 
 int main() {
 
-    //dictionary will contain the word as the key and its frequency as the value
 
     locale loc;
     regex reg("\\s+");
@@ -58,6 +57,7 @@ int main() {
         cout << "Word:  " << pairs[i].first << "  Frequency:  " << pairs[i].second << endl;
 
     }
+    return 0;
 }
 
 /**
@@ -66,15 +66,14 @@ int main() {
  */
 void checkValidity(string file) {
 
-    regex reg("\\s+");
+    regex reg("\\s\\w+");
     sregex_token_iterator iter(file.begin(), file.end(), reg, -1);
     sregex_token_iterator end;
     vector<string> lines(iter, end);
 
-    if (file == NULL|| lines.size() == 0) {
+    if (lines.size() == 0) {
         throw std::invalid_argument("INVALID INPUT");
     }
-    cout >> "";
 }
 
 /**
@@ -120,20 +119,56 @@ vector<pair<string, int>> sortMap(map<string, int> dictionary) {
 
 
 //------------------------
-//TEST CASES
+//------TEST CASES--------
 //------------------------
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-TEST_CASE("testNullInput:  ends with throwing exception: ", "[fail]")
-{
-    try {
-        checkValidity(NULL);
-        FAIL();
-    } catch (std::invalid_argument()& e){
-        EXPECT_EQ(std::string("INVALID INPUT"));
-    }
+TEST_CASE("testEmptyInput:  ends with throwing exception: ", "[fail]") {
+    checkValidity("");
+    FAIL();
 }
+
+TEST_CASE("testMultipleSpacesInput:  ends with throwing exception: ", "[fail]") {
+    checkValidity("       ");
+    FAIL();
+}
+
+TEST_CASE("testNewLineInput:  ends with throwing exception: ", "[fail]") {
+    checkValidity("\n");
+    FAIL();
+}
+
+TEST_CASE("testTabInput:  ends with throwing exception: ", "[fail]") {
+    checkValidity("\t");
+    FAIL();
+}
+
+TEST_CASE("sortMap size is correct",  "[require]")
+{
+    map<string, int> dictionary;
+    dictionary.insert(std::pair<string, int>("a", 20));
+    dictionary.insert(std::pair<string, int>("hi", 2));
+    dictionary.insert(std::pair<string, int>("then", 5));
+
+    vector<pair<string, int>> output = sortMap(dictionary);
+    REQUIRE(output.size() == 3);
+}
+TEST_CASE("sortMap sorted properly",  "[require]")
+{
+    map<string, int> dictionary;
+    dictionary.insert(std::pair<string, int>("a", 20));
+    dictionary.insert(std::pair<string, int>("hi", 2));
+    dictionary.insert(std::pair<string, int>("then", 5));
+
+    vector<pair<string, int>> output;
+    output.push_back(std::pair<string, int>("a", 20));
+    output.push_back(std::pair<string, int>("then", 5));
+    output.push_back(std::pair<string, int>("hi", 2));
+    REQUIRE(output == sortMap(dictionary));
+}
+
 
 
 
