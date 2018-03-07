@@ -6,10 +6,10 @@
 #include "catch.hpp"
 #include <iostream>
 
-TEST_CASE("testNullInput", NULL)
+TEST_CASE("testNullInput", )
 {
 
-    REQUIRE()
+    REQUIRE(checkValidity(NULL) ==  "INVALID INPUT");
 }
 
 

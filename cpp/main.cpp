@@ -2,7 +2,6 @@
 // Created by Asha Agrawal on 3/5/2018.
 //
 
-#include "FrequencyCount.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -61,10 +60,21 @@ int main() {
     }
 }
 
+/**
+ * checks that the file/line is not null or just a bunch of whitespace
+ * @param file a line from the file
+ */
 void checkValidity(string file) {
-    if (file == NULL|| file.) {
 
+    regex reg("\\s+");
+    sregex_token_iterator iter(file.begin(), file.end(), reg, -1);
+    sregex_token_iterator end;
+    vector<string> lines(iter, end);
+
+    if (file == NULL|| lines.size() == 0) {
+        throw std::invalid_argument("INVALID INPUT");
     }
+    cout >> "";
 }
 
 /**
@@ -106,6 +116,23 @@ vector<pair<string, int>> sortMap(map<string, int> dictionary) {
         return a.second < b.second;
     });
     return pairs;
+}
+
+
+//------------------------
+//TEST CASES
+//------------------------
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
+
+TEST_CASE("testNullInput:  ends with throwing exception: ", "[fail]")
+{
+    try {
+        checkValidity(NULL);
+        FAIL();
+    } catch (std::invalid_argument()& e){
+        EXPECT_EQ(std::string("INVALID INPUT"));
+    }
 }
 
 
