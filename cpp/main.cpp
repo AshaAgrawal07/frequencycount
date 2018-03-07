@@ -25,7 +25,7 @@ int main() {
 
 
     locale loc;
-    regex reg("\\s+");
+    regex reg("\\s\\W+");
 
     //read the words in the file
     string file;
@@ -66,7 +66,7 @@ int main() {
  */
 void checkValidity(string file) {
 
-    regex reg("\\s\\w+");
+    regex reg("\\s+");
     sregex_token_iterator iter(file.begin(), file.end(), reg, -1);
     sregex_token_iterator end;
     vector<string> lines(iter, end);
