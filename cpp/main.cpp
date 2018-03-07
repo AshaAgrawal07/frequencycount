@@ -1,76 +1,104 @@
 //
-// Created by Asha Agrawal on 3/3/2018.
+// Created by Asha Agrawal on 3/5/2018.
 //
 
+#include "FrequencyCount.h"
+#include "FrequencyCount.cpp"
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <map>
+#include <vector>
+#include <list>
+#include <regex>
+#include <stdexcept>
+#include <locale>
 
 using namespace std;
+static map<string, int> dictionary;
 
-hashMap sort(hashMap map) {
-    List list = new LinkedList(map.entrySet());
-    // Defined Custom Comparator here
-    Collections.sort(list, new Comparator()
-    {
-        int compare(Object o1, Object o2) {
-            return ((Comparable)((Map.Entry)(o2)).getValue())
-                    .compareTo(((Map.Entry)(o1)).getValue());
-        }
-    });
+vector<pair<string, int>> sortMap(map<string, int> map);
 
-    // Here I am copying the sorted list in HashMap
-    // using LinkedHashMap to preserve the insertion order
-    HashMap sortedHashMap = new LinkedHashMap();
-    for (Iterator it = list.iterator(); it.hasNext();) {
-        Map.Entry
-        entry = (Map.Entry)
-        it.next();
-        sortedHashMap.put(entry.getKey(), entry.getValue());
-    }
-    return sortedHashMap;
-}
+void inputWords(vector<string> vector);
 
 int main() {
-    Scanner scan = new Scanner(System.in);
 
-    while (scan.hasNextLine()) {
-        String line = scan.nextLine();
-        String s = checkValidityAndUpdate(line.trim());
-    }
-    //now that everything has been read and put into the dictionary, sort it
-    sortByValues(dictionary);
+    //dictionary will contain the word as the key and its frequency as the value
 
-    //output the first 10
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("Top 10 frequency words:");
-    Iterator iterator = dictionary.entrySet().iterator();
-    for (int i = 0; i < 10; i++) {
-        Map.Entry highestFrequency = (Map.Entry) iterator.next();
-        stringBuilder.append("\nWord:  " + highestFrequency.getKey() + "  # of Times:  " + highestFrequency.getValue());
+    locale loc;
+    regex reg("\\s+");
+
+    //read the words in the file
+    string file;
+    vector<string> lines;
+    while (cin) {
+        getline(cin, file);
+        lines.push_back(file);
     }
-    stringBuilder.toString();
+    for (int i = 0; i < lines.size(); i++) {
+        //split each line over non-alphabetical (-, ', " " etc) and store into a vector
+        sregex_token_iterator iter(lines[i].begin(), lines[i].end(), reg, -1);
+        sregex_token_iterator end;
+        vector<string> words(iter, end);
+
+        inputWords(words);
+    }
+
+    //after getting all of the words and their frequencies, I want to sort from highest frequency to lowest
+    vector<pair<string, int>> pairs;
+    pairs = sortMap(dictionary);
+
+    //now I want to output the top 10 words
+    int n = 10;
+    if (pairs.size() < 10) {
+        n = pairs.size();
+    }
+    for (int i = 0; i < n; i++) {
+        cout << "Word:  " << pairs[i].first << "  Frequency:  " << pairs[i].second << endl;
+
+    }
 }
 
-static String checkValidityAndUpdate(String line) {
-    //check that the line isnt just null or a bunch of whiteshpace
-    if (line == null || line.length() == 0 || line.matches("[\\s]+")) {
-        throw new IllegalArgumentException("INVALID INPUT");
-    }
+/**
+ * this function will go through each word of the vector and then add it accordingly to the dictionary
+ * @param words the vector of strings which contains words
+ */
+void inputWords(vector<string> words) {
+    //go through each word of the file and put it into the dictionary
+    locale loc;
+    for (int j = 0; j < words.size(); j++) {
+        //for each splittedword, we want to do the following:
+        //consider everything as case insensitive, so all words will be converted to lower case
+        string wordToLower = "";
+        wordToLower += tolower(words[j], loc);
 
-    //split over non-word characters
-    //this means that if there is an apostraphe, then the stuff after the ' will be considered a word
-    vector <String> splittedString = line.split("[\\s\\W]+");
-
-    for (String s : splittedString) {
-        String toCheck = s.toLowerCase();
-        //if the specific word already exists in the dictionary, then update, or else add the word to the dictionary
-
-        if (dictionary.containsKey(toCheck)) {
-            dictionary.put(toCheck, dictionary.get(toCheck) + 1);
-        } else {
-            dictionary.put(toCheck, 1);
+        //first check if word exists in the dictionary
+        // if it does, the increment value; else add key and value of 1 to dicitonary
+        map<string, int>::iterator it;
+        it = dictionary.find(wordToLower);
+        dictionary[wordToLower]++;
+        if (it == dictionary.end()) {
+            //if the word doesnt already exist in the dictionary, then a new K,V is made, with V=0, so I need to increment it again
+            dictionary[wordToLower]++;
         }
     }
-    return "Dictionary updated successfully";
 }
+
+/**
+ * i used this link:  https://stackoverflow.com/questions/5056645/sorting-stdmap-using-value
+ * @param dictionary which contains all of the words and their frequencies
+ * @return the vector of sorted pairs such that the word-frequency pair with the highest frequency is first
+ */
+vector<pair<string, int>> sortMap(map<string, int> dictionary) {
+    vector<pair<string, int>> pairs;
+    for (auto itr = dictionary.begin(); itr != dictionary.end(); ++itr)
+        pairs.push_back(*itr);
+
+    sort(pairs.begin(), pairs.end(), [=](pair<int, int> &a, pair<int, int> &b) {
+        return a.second < b.second;
+    });
+    return pairs;
+}
+
+
+
