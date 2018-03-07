@@ -17,9 +17,9 @@ using namespace std;
 //dictionary will contain the word as the key and its frequency as the value
 map<string, int> dictionary;
 
-vector<pair<string, int>> sortMap(map<string, int> map);
-void inputWords(vector<string> vector);
-void checkValidity(string basic_string);
+vector<pair<string, int>> SortMap(map<string, int> map);
+void InputWords(vector<string> vector);
+void CheckValidity(string basic_string);
 
 int main() {
 
@@ -32,7 +32,7 @@ int main() {
     vector<string> lines;
     while (cin) {
         getline(cin, file);
-        checkValidity(file);
+        CheckValidity(file);
         lines.push_back(file);
     }
     for (int i = 0; i < lines.size(); i++) {
@@ -41,12 +41,12 @@ int main() {
         sregex_token_iterator end;
         vector<string> words(iter, end);
 
-        inputWords(words);
+        InputWords(words);
     }
 
     //after getting all of the words and their frequencies, I want to sort from highest frequency to lowest
     vector<pair<string, int>> pairs;
-    pairs = sortMap(dictionary);
+    pairs = SortMap(dictionary);
 
     //now I want to output the top 10 words
     int n = 10;
@@ -64,7 +64,7 @@ int main() {
  * checks that the file/line is not null or just a bunch of whitespace
  * @param file a line from the file
  */
-void checkValidity(string file) {
+void CheckValidity(string file) {
 
     regex reg("\\s+");
     sregex_token_iterator iter(file.begin(), file.end(), reg, -1);
@@ -80,23 +80,23 @@ void checkValidity(string file) {
  * this function will go through each word of the vector and then add it accordingly to the dictionary
  * @param words the vector of strings which contains words
  */
-void inputWords(vector<string> words) {
+void InputWords(vector<string> words) {
     //go through each word of the file and put it into the dictionary
     locale loc;
     for (int j = 0; j < words.size(); j++) {
         //for each splittedword, we want to do the following:
         //consider everything as case insensitive, so all words will be converted to lower case
-        string wordToLower = "";
-        wordToLower += tolower(words[j], loc);
+        string word_to_lower = "";
+        word_to_lower += tolower(words[j], loc);
 
         //first check if word exists in the dictionary
         // if it does, the increment value; else add key and value of 1 to dicitonary
         map<string, int>::iterator it;
-        it = dictionary.find(wordToLower);
-        dictionary[wordToLower]++;
+        it = dictionary.find(word_to_lower);
+        dictionary[word_to_lower]++;
         if (it == dictionary.end()) {
             //if the word doesnt already exist in the dictionary, then a new K,V is made, with V=0, so I need to increment it again
-            dictionary[wordToLower]++;
+            dictionary[word_to_lower]++;
         }
     }
 }
@@ -106,7 +106,7 @@ void inputWords(vector<string> words) {
  * @param dictionary which contains all of the words and their frequencies
  * @return the vector of sorted pairs such that the word-frequency pair with the highest frequency is first
  */
-vector<pair<string, int>> sortMap(map<string, int> dictionary) {
+vector<pair<string, int>> SortMap(map<string, int> dictionary) {
     vector<pair<string, int>> pairs;
     for (auto itr = dictionary.begin(); itr != dictionary.end(); ++itr)
         pairs.push_back(*itr);
@@ -126,22 +126,22 @@ vector<pair<string, int>> sortMap(map<string, int> dictionary) {
 #include "catch.hpp"
 
 TEST_CASE("testEmptyInput:  ends with throwing exception: ", "[fail]") {
-    checkValidity("");
+    CheckValidity("");
     FAIL();
 }
 
 TEST_CASE("testMultipleSpacesInput:  ends with throwing exception: ", "[fail]") {
-    checkValidity("       ");
+    CheckValidity("       ");
     FAIL();
 }
 
 TEST_CASE("testNewLineInput:  ends with throwing exception: ", "[fail]") {
-    checkValidity("\n");
+    CheckValidity("\n");
     FAIL();
 }
 
 TEST_CASE("testTabInput:  ends with throwing exception: ", "[fail]") {
-    checkValidity("\t");
+    CheckValidity("\t");
     FAIL();
 }
 
@@ -152,7 +152,7 @@ TEST_CASE("sortMap size is correct",  "[require]")
     dictionary.insert(std::pair<string, int>("hi", 2));
     dictionary.insert(std::pair<string, int>("then", 5));
 
-    vector<pair<string, int>> output = sortMap(dictionary);
+    vector<pair<string, int>> output = SortMap(dictionary);
     REQUIRE(output.size() == 3);
 }
 TEST_CASE("sortMap sorted properly",  "[require]")
@@ -166,7 +166,7 @@ TEST_CASE("sortMap sorted properly",  "[require]")
     output.push_back(std::pair<string, int>("a", 20));
     output.push_back(std::pair<string, int>("then", 5));
     output.push_back(std::pair<string, int>("hi", 2));
-    REQUIRE(output == sortMap(dictionary));
+    REQUIRE(output == SortMap(dictionary));
 }
 
 
